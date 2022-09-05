@@ -1,3 +1,11 @@
+// TODO: Add transition from loading message to game result display
+// TODO: If current game active, show yesterday's results
+// TODO: Display yesterday's results all the time: "Jason also lost yesterday, etc..."
+// TODO: Easy way to figure out streaks with Chess dot com API?
+// TODO: Literally ANY kind of error handling.
+// TODO: Preload videos during that waiting-for-dramatic-effect window
+// TODO: Woman on the Not Yet screen disappears off-screen on small screens
+
 import { useEffect, useState } from 'react';
 import BackgroundVideo from './Components/BackgroundVideo';
 import Results from './Components/Results';
