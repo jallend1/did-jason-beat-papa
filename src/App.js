@@ -113,11 +113,13 @@ function App() {
 
   return (
     <div className="App">
-      <BackgroundVideo
-        gameResults={gameResults}
-        isReadyToLoadVideo={isReadyToLoadVideo}
-      />
-      <Results displayedMessage={displayedMessage} />
+      <div className="wrapper">
+        <BackgroundVideo
+          gameResults={gameResults}
+          isReadyToLoadVideo={isReadyToLoadVideo}
+        />
+        <Results displayedMessage={displayedMessage} />
+      </div>
     </div>
   );
 }
