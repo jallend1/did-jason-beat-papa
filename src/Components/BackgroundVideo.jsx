@@ -7,7 +7,7 @@ import DrawVideo from '../images/draw.mp4';
 const BackgroundVideo = ({ gameResults, isReadyToLoadVideo }) => {
   const backgroundVideos = {
     win: VictoryVideo,
-    lose: DefeatVideo,
+    loss: DefeatVideo,
     pending: NotYetVideo,
     loading: LoadingVideo,
     draw: DrawVideo

@@ -59,6 +59,7 @@ function App() {
       gameCode === 'insufficient'
     )
       setGameResults('draw');
+    else if (gameCode === 'checkmated') setGameResults('loss');
     else setGameResults(gameCode);
   };
 
