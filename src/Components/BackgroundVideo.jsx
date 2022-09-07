@@ -18,6 +18,7 @@ const BackgroundVideo = ({ gameResults, isReadyToLoadVideo }) => {
       <div className="background-video" key={gameResults}>
         <video autoPlay muted loop>
           <source src={backgroundVideos[gameResults]} type="video/mp4" />
+          {/* <source src={backgroundVideos.pending} type="video/mp4" /> */}
         </video>
       </div>
     );

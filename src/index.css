@@ -39,16 +39,14 @@ video {
   object-fit: cover;
   width: 100vw;
   height: 100vh;
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
-  z-index: 1;
 }
 
 .results {
-  /* position: absolute; */
   z-index: 2;
-  background-color: rgba(26, 26, 26, 0.75);
+  background-color: rgba(26, 26, 26, 0.65);
   padding: 1rem;
   border-radius: 15px;
 }
