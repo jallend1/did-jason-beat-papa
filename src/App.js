@@ -12,7 +12,7 @@ import Results from './Components/Results';
 
 const resultStates = {
   win: '🎉 Yes. 🎉',
-  loss: 'No!',
+  loss: 'No.',
   draw: 'It was a tie :(',
   pending: 'Not Yet.',
   loading: 'And the verdict is...'
