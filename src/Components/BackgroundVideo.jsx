@@ -16,9 +16,14 @@ const BackgroundVideo = ({ gameResults, isReadyToLoadVideo }) => {
   if (isReadyToLoadVideo) {
     return (
       <div className="background-video" key={gameResults}>
-        <video autoPlay muted loop>
+        <video
+          autoPlay
+          muted
+          loop
+          className={gameResults === 'pending' ? 'pending-video' : null}
+        >
+          {/* Pending video needs to be shifted left in order to not be a creepy foot video on mobile */}
           <source src={backgroundVideos[gameResults]} type="video/mp4" />
-          {/* <source src={backgroundVideos.pending} type="video/mp4" /> */}
         </video>
       </div>
     );
