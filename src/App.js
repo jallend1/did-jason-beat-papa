@@ -113,6 +113,9 @@ function App() {
   return (
     <div className="App">
       <div className="wrapper">
+        <header className="status-header">
+          <h1> Did Jason beat Papa today?</h1>
+        </header>
         <BackgroundVideo
           gameResults={gameResults}
           isReadyToLoadVideo={isReadyToLoadVideo}

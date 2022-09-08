@@ -19,6 +19,11 @@ code {
   background-color: rgb(26, 26, 26);
 }
 
+.status-header {
+  font-size: 0.75rem;
+  z-index: 1;
+}
+
 .wrapper {
   color: #fff;
   height: 100vh;
@@ -26,13 +31,8 @@ code {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   text-align: center;
-}
-
-h1 {
-  font-size: 3rem;
-  margin: 0;
+  z-index: 2;
 }
 
 video {
@@ -49,10 +49,23 @@ video {
 }
 
 .results {
+  height: 80vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   z-index: 2;
+}
+
+.results-message {
+  font-size: 2rem;
+  margin: 0;
   background-color: rgba(26, 26, 26, 0.65);
   padding: 1rem;
   border-radius: 15px;
+}
+
+.results-message h2 {
+  margin: 0;
 }
 
 a {
