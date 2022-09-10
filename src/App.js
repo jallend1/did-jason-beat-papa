@@ -4,6 +4,7 @@
 // TODO: Easy way to figure out streaks with Chess dot com API?
 // TODO: Literally ANY kind of error handling.
 // TODO: Preload videos during that waiting-for-dramatic-effect window
+// TODO: Consolidate all date functions -- Use state?
 
 import { useEffect, useState } from 'react';
 import BackgroundVideo from './Components/BackgroundVideo';
@@ -38,6 +39,7 @@ function App() {
     // IF there are active games, verifies that one of them DOES indeed involve Papa
     if (activeGames && activeGames.length > 0) {
       // If a Papa game is happening, reflect that in gameCode. If not, reflect Chess Dot Com result
+      // TODO: Improve this filter to it's not just limited to only one active game; Object.keys, filter, etc...
       if (
         activeGames[0].black ===
           'https://api.chess.com/pub/player/dchessmeister1' ||
@@ -46,19 +48,12 @@ function App() {
       ) {
         setGameCode('pending');
       }
-    }
-    // Check the date of the most recent completed game
-    // If today, use chess result
-    // If not today, set status to pending
-    // Display yesterday's result as a subtitle
-    else if (gameArchive) {
+    } else if (gameArchive) {
       const mostRecentGame = gameArchive[gameArchive.length - 1];
       if (isTodaysGame(mostRecentGame)) {
-        if (mostRecentGame.black.username === 'jallend1') {
-          setGameCode(mostRecentGame.black.result);
-        } else {
-          setGameCode(mostRecentGame.white.result);
-        }
+        mostRecentGame.black.username === 'jallend1'
+          ? setGameCode(mostRecentGame.black.result)
+          : setGameCode(mostRecentGame.white.result);
       } else {
         setGameCode('pending');
       }
@@ -66,12 +61,7 @@ function App() {
   };
 
   const translateGameResult = () => {
-    if (
-      gameCode === 'agree' ||
-      gameCode === 'stalemate' ||
-      gameCode === 'repetition' ||
-      gameCode === 'insufficient'
-    )
+    if (gameCode === 'agree' || 'stalemate' || 'repetition' || 'insufficient')
       setGameResults('draw');
     else if (gameCode === 'checkmated') setGameResults('loss');
     else setGameResults(gameCode);
