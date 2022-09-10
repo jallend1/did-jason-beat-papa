@@ -1,3 +1,5 @@
+import { useRef } from 'react';
+
 import VictoryVideo from '../images/win.mp4';
 import DefeatVideo from '../images/defeat.mp4';
 import LoadingVideo from '../images/loading.mp4';
@@ -13,6 +15,15 @@ const BackgroundVideo = ({ gameResults, isReadyToLoadVideo }) => {
     draw: DrawVideo
   };
 
+  const videoRef = useRef(null);
+
+  // Download the video file if it is not already downloaded
+  const downloadVideo = () => {
+    if (videoRef.current) {
+      videoRef.current.load();
+    }
+  };
+
   if (isReadyToLoadVideo) {
     return (
       <div className="background-video" key={gameResults}>
@@ -21,18 +32,22 @@ const BackgroundVideo = ({ gameResults, isReadyToLoadVideo }) => {
           muted
           loop
           className={gameResults === 'pending' ? 'pending-video' : null}
-        >
-          {/* Pending video needs to be shifted left in order to not be a creepy foot video on mobile */}
-          <source src={backgroundVideos[gameResults]} type="video/mp4" />
-        </video>
+          src={backgroundVideos[gameResults]}
+          type="video/mp4"
+          ref={videoRef}
+        />
       </div>
     );
   } else {
     return (
       <div className="background-video">
-        <video autoPlay muted loop>
-          <source src={backgroundVideos.loading} type="video/mp4" />
-        </video>
+        <video
+          autoPlay
+          muted
+          loop
+          src={backgroundVideos.loading}
+          type="video/mp4"
+        />
       </div>
     );
   }
