@@ -63,7 +63,12 @@ function App() {
   };
 
   const translateGameResult = () => {
-    if (gameCode === 'agree' || 'stalemate' || 'repetition' || 'insufficient')
+    if (
+      gameCode === 'agree' ||
+      gameCode === 'stalemate' ||
+      gameCode === 'repetition' ||
+      gameCode === 'insufficient'
+    )
       setGameResults('draw');
     else if (gameCode === 'checkmated') setGameResults('loss');
     else setGameResults(gameCode);
