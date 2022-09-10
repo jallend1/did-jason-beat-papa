@@ -39,12 +39,12 @@ function App() {
     // IF there are active games, verifies that one of them DOES indeed involve Papa
     if (activeGames && activeGames.length > 0) {
       // If a Papa game is happening, reflect that in gameCode. If not, reflect Chess Dot Com result
-      // TODO: When active game is happening and you can see the array, improve this filter to it's not just limited to only one active game; Object.keys, filter, etc...
       if (
-        activeGames[0].black ===
-          'https://api.chess.com/pub/player/dchessmeister1' ||
-        activeGames[0].white ===
-          'https://api.chess.com/pub/player/dchessmeister1'
+        activeGames.filter((activeGame) =>
+          Object.values(activeGame).includes(
+            'https://api.chess.com/pub/player/dchessmeister1'
+          )
+        ).length > 0
       ) {
         setGameCode('pending');
       }
