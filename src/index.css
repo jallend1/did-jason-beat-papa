@@ -68,6 +68,10 @@ video {
   margin: 0;
 }
 
+.previous-results {
+  font-size: 0.75rem;
+}
+
 a {
   color: #fff;
 }

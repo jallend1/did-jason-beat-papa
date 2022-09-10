@@ -39,7 +39,7 @@ function App() {
     // IF there are active games, verifies that one of them DOES indeed involve Papa
     if (activeGames && activeGames.length > 0) {
       // If a Papa game is happening, reflect that in gameCode. If not, reflect Chess Dot Com result
-      // TODO: Improve this filter to it's not just limited to only one active game; Object.keys, filter, etc...
+      // TODO: When active game is happening and you can see the array, improve this filter to it's not just limited to only one active game; Object.keys, filter, etc...
       if (
         activeGames[0].black ===
           'https://api.chess.com/pub/player/dchessmeister1' ||
@@ -51,10 +51,12 @@ function App() {
     } else if (gameArchive) {
       const mostRecentGame = gameArchive[gameArchive.length - 1];
       if (isTodaysGame(mostRecentGame)) {
+        // If the most recent game was played today, display the results
         mostRecentGame.black.username === 'jallend1'
           ? setGameCode(mostRecentGame.black.result)
           : setGameCode(mostRecentGame.white.result);
       } else {
+        // If the most recent game ended on a date that is not today, set it to pending
         setGameCode('pending');
       }
     }

@@ -3,6 +3,7 @@ const Results = ({ displayedMessage }) => {
     <div className="results">
       <div className="results-message">
         <h2>{displayedMessage}</h2>
+        {/* <p className="previous-results">Yesterday's results will go here.</p> */}
       </div>
     </div>
   );
