@@ -28,10 +28,16 @@ function App() {
   const [gameCode, setGameCode] = useState(null);
   const [isReadyToLoadVideo, setIsReadyToLoadVideo] = useState(false);
 
+  const isTodaysGame = (game) => {
+    const gameEndDate = new Date(game.end_time * 1000).getDate();
+    const todaysDate = new Date().getDate();
+    return gameEndDate === todaysDate;
+  };
+
   const checkActiveGameOpponent = () => {
     // IF there are active games, verifies that one of them DOES indeed involve Papa
     if (activeGames && activeGames.length > 0) {
-      // If a Papa game is happening, reflect that in gameCode. If not, reflect Chess Dot Com code
+      // If a Papa game is happening, reflect that in gameCode. If not, reflect Chess Dot Com result
       if (
         activeGames[0].black ===
           'https://api.chess.com/pub/player/dchessmeister1' ||
@@ -40,12 +46,21 @@ function App() {
       ) {
         setGameCode('pending');
       }
-    } else if (gameArchive) {
+    }
+    // Check the date of the most recent completed game
+    // If today, use chess result
+    // If not today, set status to pending
+    // Display yesterday's result as a subtitle
+    else if (gameArchive) {
       const mostRecentGame = gameArchive[gameArchive.length - 1];
-      if (mostRecentGame.black.username === 'jallend1') {
-        setGameCode(mostRecentGame.black.result);
+      if (isTodaysGame(mostRecentGame)) {
+        if (mostRecentGame.black.username === 'jallend1') {
+          setGameCode(mostRecentGame.black.result);
+        } else {
+          setGameCode(mostRecentGame.white.result);
+        }
       } else {
-        setGameCode(mostRecentGame.white.result);
+        setGameCode('pending');
       }
     }
   };
