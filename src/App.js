@@ -27,6 +27,7 @@ function App() {
   const [activeGames, setActiveGames] = useState(null);
   const [gameArchive, setGameArchive] = useState(null);
   const [gameCode, setGameCode] = useState("loading");
+  const [previousGame, setPreviousGame] = useState(null);
 
   const isTodaysGame = (game) => {
     const gameEndDate = new Date(game.end_time * 1000).getDate();
@@ -46,9 +47,11 @@ function App() {
         ).length > 0
       ) {
         setGameCode("pending");
+        if (gameArchive) setPreviousGame(gameArchive[gameArchive.length - 1]);
       }
     } else if (gameArchive) {
       const mostRecentGame = gameArchive[gameArchive.length - 1];
+      setPreviousGame(gameArchive[gameArchive.length - 2]);
       if (isTodaysGame(mostRecentGame)) {
         // If the most recent game was played today, display the results
         mostRecentGame.black.username === "jallend1"
