@@ -61,6 +61,18 @@ function App() {
     }
   };
 
+  const translateGameResult = (gameCode) => {
+    if (
+      gameCode === "agree" ||
+      gameCode === "stalemate" ||
+      gameCode === "repetition" ||
+      gameCode === "insufficient"
+    )
+      return "draw";
+    else if (gameCode === "checkmated") return "loss";
+    else return gameCode;
+  };
+
   // Fetches Games and Puts them in State
   useEffect(() => {
     const formatCurrentMonth = (currentDate) => {
@@ -99,23 +111,12 @@ function App() {
   }, []);
 
   useEffect(checkActiveGameOpponent, [activeGames, gameArchive]);
-  useEffect(() => {
-    const translateGameResult = () => {
-      if (
-        gameCode === "agree" ||
-        gameCode === "stalemate" ||
-        gameCode === "repetition" ||
-        gameCode === "insufficient"
-      )
-        setGameResults("draw");
-      else if (gameCode === "checkmated") setGameResults("loss");
-      else setGameResults(gameCode);
-    };
 
+  useEffect(() => {
     const displayGameOutcome = () => {
       setDisplayedMessage(resultStates[gameResults]);
       setTimeout(() => {
-        translateGameResult();
+        setGameResults(translateGameResult(gameCode));
       }, "3000");
     };
 
