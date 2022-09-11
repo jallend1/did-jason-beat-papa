@@ -72,6 +72,7 @@ function App() {
       setGameResults('draw');
     else if (gameCode === 'checkmated') setGameResults('loss');
     else setGameResults(gameCode);
+    console.log(gameCode);
   };
 
   const displayGameOutcome = () => {

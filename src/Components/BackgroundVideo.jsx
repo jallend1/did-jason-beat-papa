@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 
 import VictoryVideo from '../assets/videos/win.mp4';
 import DefeatVideo from '../assets/videos/defeat.mp4';
@@ -26,8 +26,6 @@ const BackgroundVideo = ({ gameResults, isReadyToLoadVideo }) => {
     setIsVideoLoaded(true);
   };
 
-  const videoRef = useRef(null);
-
   if (isReadyToLoadVideo) {
     return (
       <div className="background-video" key={gameResults}>
@@ -44,7 +42,6 @@ const BackgroundVideo = ({ gameResults, isReadyToLoadVideo }) => {
           className={gameResults === 'pending' ? 'pending-video' : null}
           src={backgroundVideos[gameResults].video}
           type="video/mp4"
-          ref={videoRef}
         />
       </div>
     );
