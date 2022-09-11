@@ -6,27 +6,27 @@
 // TODO: Preload videos during that waiting-for-dramatic-effect window
 // TODO: Consolidate all date functions -- Use state?
 
-import { useEffect, useState } from 'react';
-import BackgroundVideo from './Components/BackgroundVideo';
-import Results from './Components/Results';
+import { useEffect, useState } from "react";
+import BackgroundVideo from "./Components/BackgroundVideo";
+import Results from "./Components/Results";
 
 const resultStates = {
-  win: '🎉 Yes. 🎉',
-  loss: 'No.',
-  draw: 'It was a tie :(',
-  pending: 'Not Yet.',
-  loading: 'And the verdict is...'
+  win: "🎉 Yes. 🎉",
+  loss: "No.",
+  draw: "It was a tie :(",
+  pending: "Not Yet.",
+  loading: "And the verdict is...",
 };
 
 function App() {
-  const fetchURL = 'https://api.chess.com/pub/player/jallend1/games';
-  const [gameResults, setGameResults] = useState('loading');
+  const fetchURL = "https://api.chess.com/pub/player/jallend1/games";
+  const [gameResults, setGameResults] = useState("loading");
   const [displayedMessage, setDisplayedMessage] = useState(
     resultStates.loading
   );
   const [activeGames, setActiveGames] = useState(null);
   const [gameArchive, setGameArchive] = useState(null);
-  const [gameCode, setGameCode] = useState('loading');
+  const [gameCode, setGameCode] = useState("loading");
   const [isReadyToDisplay, setIsReadyToDisplay] = useState(false);
 
   const isTodaysGame = (game) => {
@@ -42,43 +42,24 @@ function App() {
       if (
         activeGames.filter((activeGame) =>
           Object.values(activeGame).includes(
-            'https://api.chess.com/pub/player/dchessmeister1'
+            "https://api.chess.com/pub/player/dchessmeister1"
           )
         ).length > 0
       ) {
-        setGameCode('pending');
+        setGameCode("pending");
       }
     } else if (gameArchive) {
       const mostRecentGame = gameArchive[gameArchive.length - 1];
       if (isTodaysGame(mostRecentGame)) {
         // If the most recent game was played today, display the results
-        mostRecentGame.black.username === 'jallend1'
+        mostRecentGame.black.username === "jallend1"
           ? setGameCode(mostRecentGame.black.result)
           : setGameCode(mostRecentGame.white.result);
       } else {
         // If the most recent game ended on a date that is not today, set it to pending
-        setGameCode('pending');
+        setGameCode("pending");
       }
     }
-  };
-
-  const translateGameResult = () => {
-    if (
-      gameCode === 'agree' ||
-      gameCode === 'stalemate' ||
-      gameCode === 'repetition' ||
-      gameCode === 'insufficient'
-    )
-      setGameResults('draw');
-    else if (gameCode === 'checkmated') setGameResults('loss');
-    else setGameResults(gameCode);
-  };
-
-  const displayGameOutcome = () => {
-    setDisplayedMessage(resultStates[gameResults]);
-    setTimeout(() => {
-      setIsReadyToDisplay(true);
-    }, '4000');
   };
 
   // Fetches Games and Puts them in State
@@ -86,7 +67,7 @@ function App() {
     const formatCurrentMonth = (currentDate) => {
       // Ensures month is in two digit format endpoint requires
       let currentMonth = currentDate.getMonth() + 1;
-      if (currentMonth < 10) currentMonth = '0' + currentMonth;
+      if (currentMonth < 10) currentMonth = "0" + currentMonth;
       return currentMonth;
     };
 
@@ -119,8 +100,28 @@ function App() {
   }, []);
 
   useEffect(checkActiveGameOpponent, [activeGames, gameArchive]);
-  useEffect(translateGameResult, [gameCode]);
-  useEffect(displayGameOutcome, [gameResults]);
+  useEffect(() => {
+    const translateGameResult = () => {
+      if (
+        gameCode === "agree" ||
+        gameCode === "stalemate" ||
+        gameCode === "repetition" ||
+        gameCode === "insufficient"
+      )
+        setGameResults("draw");
+      else if (gameCode === "checkmated") setGameResults("loss");
+      else setGameResults(gameCode);
+    };
+
+    const displayGameOutcome = () => {
+      setDisplayedMessage(resultStates[gameResults]);
+      setTimeout(() => {
+        translateGameResult();
+      }, "3000");
+    };
+
+    displayGameOutcome();
+  }, [gameResults, gameCode]);
 
   return (
     <div className="App">
