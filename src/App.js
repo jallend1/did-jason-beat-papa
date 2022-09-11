@@ -54,14 +54,25 @@ function App() {
       setPreviousGame(gameArchive[gameArchive.length - 2]);
       if (isTodaysGame(mostRecentGame)) {
         // If the most recent game was played today, display the results
-        mostRecentGame.black.username === "jallend1"
-          ? setGameCode(mostRecentGame.black.result)
-          : setGameCode(mostRecentGame.white.result);
+        setGameCode(getJasonsResults(mostRecentGame));
       } else {
-        // If the most recent game ended on a date that is not today, set it to pending
+        // If the most recent game ended on a date that is not today, set status to pending
         setGameCode("pending");
       }
     }
+  };
+
+  const getJasonsResults = (game) => {
+    return game.black.username === "jallend1"
+      ? game.black.result
+      : game.white.result;
+  };
+
+  const displayGameOutcome = () => {
+    setDisplayedMessage(resultStates[gameResults]);
+    setTimeout(() => {
+      setGameResults(translateGameResult(gameCode));
+    }, "3000");
   };
 
   const translateGameResult = (gameCode) => {
@@ -114,17 +125,7 @@ function App() {
   }, []);
 
   useEffect(checkActiveGameOpponent, [activeGames, gameArchive]);
-
-  useEffect(() => {
-    const displayGameOutcome = () => {
-      setDisplayedMessage(resultStates[gameResults]);
-      setTimeout(() => {
-        setGameResults(translateGameResult(gameCode));
-      }, "3000");
-    };
-
-    displayGameOutcome();
-  }, [gameResults, gameCode]);
+  useEffect(displayGameOutcome, [gameResults, gameCode]);
 
   return (
     <div className="App">
