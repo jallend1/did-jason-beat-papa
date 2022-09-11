@@ -44,8 +44,10 @@ video {
   height: 100vh;
 }
 
-.pending-video {
-  object-position: -200px;
+@media (max-width: 800px) {
+  .pending-video {
+    object-position: -200px;
+  }
 }
 
 .results {
