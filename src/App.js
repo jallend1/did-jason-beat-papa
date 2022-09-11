@@ -26,8 +26,7 @@ function App() {
   );
   const [activeGames, setActiveGames] = useState(null);
   const [gameArchive, setGameArchive] = useState(null);
-  const [gameCode, setGameCode] = useState(null);
-  const [isReadyToLoadVideo, setIsReadyToLoadVideo] = useState(false);
+  const [gameCode, setGameCode] = useState('loading');
 
   const isTodaysGame = (game) => {
     const gameEndDate = new Date(game.end_time * 1000).getDate();
@@ -72,13 +71,11 @@ function App() {
       setGameResults('draw');
     else if (gameCode === 'checkmated') setGameResults('loss');
     else setGameResults(gameCode);
-    console.log(gameCode);
   };
 
   const displayGameOutcome = () => {
     setTimeout(() => {
       setDisplayedMessage(resultStates[gameResults]);
-      setIsReadyToLoadVideo(true);
     }, '4000');
   };
 
@@ -129,10 +126,7 @@ function App() {
         <header className="status-header">
           <h1> Did Jason beat Papa today?</h1>
         </header>
-        <BackgroundVideo
-          gameResults={gameResults}
-          isReadyToLoadVideo={isReadyToLoadVideo}
-        />
+        <BackgroundVideo gameResults={gameResults} />
         <Results displayedMessage={displayedMessage} />
       </div>
     </div>
