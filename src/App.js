@@ -1,6 +1,4 @@
 // TODO: Add transition from loading message to game result display
-// TODO: If current game active, show yesterday's results
-// TODO: Display yesterday's results all the time: "Jason also lost yesterday, etc..."
 // TODO: Easy way to figure out streaks with Chess dot com API?
 // TODO: Literally ANY kind of error handling.
 // TODO: Preload videos during that waiting-for-dramatic-effect window
@@ -33,6 +31,13 @@ function App() {
     const gameEndDate = new Date(game.end_time * 1000).getDate();
     const todaysDate = new Date().getDate();
     return gameEndDate === todaysDate;
+  };
+
+  const formatCurrentMonth = (currentDate) => {
+    // Ensures month is in two digit format endpoint requires
+    let currentMonth = currentDate.getMonth() + 1;
+    if (currentMonth < 10) currentMonth = '0' + currentMonth;
+    return currentMonth;
   };
 
   const checkActiveGameOpponent = () => {
@@ -75,10 +80,6 @@ function App() {
     }, '3000');
   };
 
-  // const didJasonWin = (game) => {
-  //   console.log(translateGameResult(getJasonsResults(game)));
-  // };
-
   const translateGameResult = (gameCode) => {
     if (
       gameCode === 'agree' ||
@@ -93,13 +94,6 @@ function App() {
 
   // Fetches Games and Puts them in State
   useEffect(() => {
-    const formatCurrentMonth = (currentDate) => {
-      // Ensures month is in two digit format endpoint requires
-      let currentMonth = currentDate.getMonth() + 1;
-      if (currentMonth < 10) currentMonth = '0' + currentMonth;
-      return currentMonth;
-    };
-
     const getDateInfo = () => {
       const currentDate = new Date();
       const currentYear = currentDate.getFullYear();
