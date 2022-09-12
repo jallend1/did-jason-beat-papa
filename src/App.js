@@ -52,6 +52,7 @@ function App() {
     } else if (gameArchive) {
       const mostRecentGame = gameArchive[gameArchive.length - 1];
       setPreviousGame(gameArchive[gameArchive.length - 2]);
+      console.log(previousGame);
       if (isTodaysGame(mostRecentGame)) {
         // If the most recent game was played today, display the results
         setGameCode(getJasonsResults(mostRecentGame));
@@ -123,12 +124,12 @@ function App() {
           setGameArchive([...games]);
         });
     };
-    console.log(previousGame);
+
     fetchActiveGames();
     fetchArchiveGames();
   }, []);
 
-  useEffect(checkActiveGameOpponent, [activeGames, gameArchive]);
+  useEffect(checkActiveGameOpponent, [activeGames, gameArchive, previousGame]);
   useEffect(displayGameOutcome, [gameResults, gameCode]);
 
   return (
