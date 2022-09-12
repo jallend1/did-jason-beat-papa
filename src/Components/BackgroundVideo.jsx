@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import VictoryVideo from '../assets/videos/win.mp4';
 import DefeatVideo from '../assets/videos/defeat.mp4';
@@ -25,6 +25,10 @@ const BackgroundVideo = ({ gameResults }) => {
     setIsVideoLoaded(true);
   };
 
+  useEffect(() => {
+    setIsVideoLoaded(false);
+  }, [gameResults]);
+
   return (
     <div className="background-video" key={gameResults}>
       <img
@@ -41,6 +45,7 @@ const BackgroundVideo = ({ gameResults }) => {
         src={backgroundVideos[gameResults].video}
         type="video/mp4"
         onLoadedData={onLoadedData}
+        style={{ opacity: isVideoLoaded ? 1 : 0 }}
       />
     </div>
   );
