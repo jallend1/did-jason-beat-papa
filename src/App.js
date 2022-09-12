@@ -3,6 +3,7 @@
 // TODO: Literally ANY kind of error handling.
 // TODO: Preload videos during that waiting-for-dramatic-effect window
 // TODO: Consolidate all date functions -- Use state?
+// TODO: Early in month, array will be too short
 
 import { useEffect, useState } from 'react';
 import BackgroundVideo from './Components/BackgroundVideo';
@@ -121,6 +122,17 @@ function App() {
     fetchActiveGames();
     fetchArchiveGames();
   }, []);
+
+  // TODO: Universalize the fetch to allow for any month/year
+  // const fetchArchive = (year, month) => {
+  //   if (games.length < 15) {
+  //     fetch(fetchURL + `/2022/07`)
+  //       .then((res) => res.json())
+  //       .then((previousGames) => {
+  //         setGameArchive([...games, ...previousGames.games]);
+  //       });
+  //   }
+  // };
 
   useEffect(checkActiveGameOpponent, [activeGames, gameArchive, previousGame]);
   useEffect(displayGameOutcome, [gameResults, gameCode]);
