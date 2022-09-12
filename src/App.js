@@ -6,27 +6,27 @@
 // TODO: Preload videos during that waiting-for-dramatic-effect window
 // TODO: Consolidate all date functions -- Use state?
 
-import { useEffect, useState } from "react";
-import BackgroundVideo from "./Components/BackgroundVideo";
-import Results from "./Components/Results";
+import { useEffect, useState } from 'react';
+import BackgroundVideo from './Components/BackgroundVideo';
+import Results from './Components/Results';
 
 const resultStates = {
-  win: "🎉 Yes. 🎉",
-  loss: "No.",
-  draw: "It was a tie :(",
-  pending: "Not Yet.",
-  loading: "And the verdict is...",
+  win: '🎉 Yes. 🎉',
+  loss: 'No.',
+  draw: 'It was a tie :(',
+  pending: 'Not Yet.',
+  loading: 'And the verdict is...'
 };
 
 function App() {
-  const fetchURL = "https://api.chess.com/pub/player/jallend1/games";
-  const [gameResults, setGameResults] = useState("loading");
+  const fetchURL = 'https://api.chess.com/pub/player/jallend1/games';
+  const [gameResults, setGameResults] = useState('loading');
   const [displayedMessage, setDisplayedMessage] = useState(
     resultStates.loading
   );
   const [activeGames, setActiveGames] = useState(null);
   const [gameArchive, setGameArchive] = useState(null);
-  const [gameCode, setGameCode] = useState("loading");
+  const [gameCode, setGameCode] = useState('loading');
   const [previousGame, setPreviousGame] = useState(null);
 
   const isTodaysGame = (game) => {
@@ -42,29 +42,29 @@ function App() {
       if (
         activeGames.filter((activeGame) =>
           Object.values(activeGame).includes(
-            "https://api.chess.com/pub/player/dchessmeister1"
+            'https://api.chess.com/pub/player/dchessmeister1'
           )
         ).length > 0
       ) {
-        setGameCode("pending");
+        setGameCode('pending');
         if (gameArchive) setPreviousGame(gameArchive[gameArchive.length - 1]);
       }
     } else if (gameArchive) {
       const mostRecentGame = gameArchive[gameArchive.length - 1];
-      setPreviousGame(gameArchive[gameArchive.length - 2]);
+      setPreviousGame(getJasonsResults(gameArchive[gameArchive.length - 2]));
       console.log(previousGame);
       if (isTodaysGame(mostRecentGame)) {
         // If the most recent game was played today, display the results
         setGameCode(getJasonsResults(mostRecentGame));
       } else {
         // If the most recent game ended on a date that is not today, set status to pending
-        setGameCode("pending");
+        setGameCode('pending');
       }
     }
   };
 
   const getJasonsResults = (game) => {
-    return game.black.username === "jallend1"
+    return game.black.username === 'jallend1'
       ? game.black.result
       : game.white.result;
   };
@@ -73,7 +73,7 @@ function App() {
     setDisplayedMessage(resultStates[gameResults]);
     setTimeout(() => {
       setGameResults(translateGameResult(gameCode));
-    }, "3000");
+    }, '3000');
   };
 
   // const didJasonWin = (game) => {
@@ -82,13 +82,13 @@ function App() {
 
   const translateGameResult = (gameCode) => {
     if (
-      gameCode === "agree" ||
-      gameCode === "stalemate" ||
-      gameCode === "repetition" ||
-      gameCode === "insufficient"
+      gameCode === 'agree' ||
+      gameCode === 'stalemate' ||
+      gameCode === 'repetition' ||
+      gameCode === 'insufficient'
     )
-      return "draw";
-    else if (gameCode === "checkmated") return "loss";
+      return 'draw';
+    else if (gameCode === 'checkmated') return 'loss';
     else return gameCode;
   };
 
@@ -97,7 +97,7 @@ function App() {
     const formatCurrentMonth = (currentDate) => {
       // Ensures month is in two digit format endpoint requires
       let currentMonth = currentDate.getMonth() + 1;
-      if (currentMonth < 10) currentMonth = "0" + currentMonth;
+      if (currentMonth < 10) currentMonth = '0' + currentMonth;
       return currentMonth;
     };
 
@@ -139,7 +139,10 @@ function App() {
           <h1> Did Jason beat Papa today?</h1>
         </header>
         <BackgroundVideo gameResults={gameResults} />
-        <Results displayedMessage={displayedMessage} />
+        <Results
+          displayedMessage={displayedMessage}
+          previousGame={previousGame}
+        />
       </div>
     </div>
   );

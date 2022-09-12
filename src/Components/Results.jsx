@@ -1,9 +1,9 @@
-const Results = ({ displayedMessage }) => {
+const Results = ({ displayedMessage, previousGame }) => {
   return (
     <div className="results">
       <div className="results-message">
         <h2>{displayedMessage}</h2>
-        {/* <p className="previous-results">Yesterday's results will go here.</p> */}
+        <p className="previous-results">{previousGame}</p>
       </div>
     </div>
   );
