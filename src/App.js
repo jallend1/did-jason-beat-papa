@@ -75,6 +75,10 @@ function App() {
     }, "3000");
   };
 
+  // const didJasonWin = (game) => {
+  //   console.log(translateGameResult(getJasonsResults(game)));
+  // };
+
   const translateGameResult = (gameCode) => {
     if (
       gameCode === "agree" ||
@@ -119,7 +123,7 @@ function App() {
           setGameArchive([...games]);
         });
     };
-
+    console.log(previousGame);
     fetchActiveGames();
     fetchArchiveGames();
   }, []);
