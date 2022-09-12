@@ -52,7 +52,6 @@ function App() {
     } else if (gameArchive) {
       const mostRecentGame = gameArchive[gameArchive.length - 1];
       setPreviousGame(getJasonsResults(gameArchive[gameArchive.length - 2]));
-      console.log(previousGame);
       if (isTodaysGame(mostRecentGame)) {
         // If the most recent game was played today, display the results
         setGameCode(getJasonsResults(mostRecentGame));
@@ -142,6 +141,7 @@ function App() {
         <Results
           displayedMessage={displayedMessage}
           previousGame={previousGame}
+          gameResults={gameResults}
         />
       </div>
     </div>
