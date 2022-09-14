@@ -41,16 +41,21 @@ function App() {
     return currentMonth;
   };
 
+  // TODO: Apply this function to archive games as well
+  const checkIsPapaOpponent = (game) => {
+    const papaURL = 'https://api.chess.com/pub/player/dchessmeister1';
+    if (Object.values(game.black).includes(papaURL)) return true;
+    else if (Object.values(game.white).includes(papaURL)) return true;
+    // If active game, opponent URL is stored at top level
+    else if (Object.values(game).includes(papaURL)) return true;
+    else return false;
+  };
+
   const checkActiveGameOpponent = () => {
-    // IF there are active games, verifies that one of them DOES indeed involve Papa
     if (activeGames && activeGames.length > 0) {
-      // If a Papa game is happening, reflect that in gameCode. If not, reflect Chess Dot Com result
       if (
-        activeGames.filter((activeGame) =>
-          Object.values(activeGame).includes(
-            'https://api.chess.com/pub/player/dchessmeister1'
-          )
-        ).length > 0
+        activeGames.filter((activeGame) => checkIsPapaOpponent(activeGame))
+          .length > 0
       ) {
         setGameCode('pending');
         if (gameArchive) setPreviousGame(gameArchive[gameArchive.length - 1]);
