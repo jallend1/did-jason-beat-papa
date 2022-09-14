@@ -34,11 +34,10 @@ function App() {
     return gameEndDate === todaysDate;
   };
 
-  const formatCurrentMonth = (currentDate) => {
+  const formatMonth = (month) => {
     // Ensures month is in two digit format endpoint requires
-    let currentMonth = currentDate.getMonth() + 1;
-    if (currentMonth < 10) currentMonth = '0' + currentMonth;
-    return currentMonth;
+    if (month < 10) month = '0' + month;
+    return month;
   };
 
   // TODO: Apply this function to archive games as well
@@ -101,13 +100,31 @@ function App() {
   const getDateInfo = () => {
     const currentDate = new Date();
     const currentYear = currentDate.getFullYear();
-    const currentMonth = formatCurrentMonth(currentDate);
-    return [currentYear, currentMonth];
+    const currentDay = currentDate.getDate();
+    const currentMonth = formatMonth(currentDate.getMonth() + 1);
+    return [currentYear, currentMonth, currentDay];
   };
 
-  const [currentYear, currentMonth] = getDateInfo();
+  const [currentYear, currentMonth, currentDay] = getDateInfo();
+
+  const calculateSecondFetchURL = () => {
+    if (currentDay > 1) return null;
+    else {
+      let previousGameYear = currentYear;
+      let previousGameMonth = currentMonth - 1;
+      if (previousGameMonth < 0) {
+        previousGameMonth = 12;
+        previousGameYear = currentYear - 1;
+      }
+      previousGameMonth = formatMonth(previousGameMonth);
+      return `https://api.chess.com/pub/player/jallend1/games/${previousGameYear}/${previousGameMonth}`;
+    }
+  };
+
+  const secondFetchURL = calculateSecondFetchURL();
   const { games: gameArchive } = useFetch(
-    fetchURL + `/${currentYear}/${currentMonth}`
+    fetchURL + `/${currentYear}/${currentMonth}`,
+    secondFetchURL
   );
 
   // TODO: Universalize the fetch to allow for any month/year

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-const useFetch = (fetchURL) => {
+const useFetch = (fetchURL, secondFetchURL = null) => {
   const [games, setGames] = useState(null);
   const [isPending, setIsPending] = useState(true);
   const [error, setError] = useState(null);
@@ -12,15 +12,30 @@ const useFetch = (fetchURL) => {
         return res.json();
       })
       .then(({ games }) => {
-        setGames([...games]);
-        setIsPending(false);
-        setError(null);
-      }) // If there is an error, set the error state to the error message
+        if (secondFetchURL) {
+          fetch(secondFetchURL)
+            .then((res) => {
+              if (!res.ok)
+                throw Error("Couldn't fetch data from that resource.");
+              return res.json();
+            })
+            .then(({ games: secondGames }) => {
+              setGames([...games, ...secondGames]);
+              setIsPending(false);
+              setError(null);
+            });
+        } else {
+          setGames([...games]);
+          setIsPending(false);
+          setError(null);
+        }
+      })
+      // If there is an error, set the error state to the error message
       .catch((err) => {
         setIsPending(false);
         setError(err.message);
       });
-  }, [fetchURL]);
+  }, [fetchURL, secondFetchURL]);
 
   return { isPending, error, games };
 };
