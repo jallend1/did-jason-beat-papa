@@ -8,7 +8,7 @@ const useFetch = (fetchURL) => {
   useEffect(() => {
     fetch(fetchURL)
       .then((res) => {
-        if (!res.ok) throw Error('PROBLEM!');
+        if (!res.ok) throw Error("Couldn't fetch data from that resource.");
         return res.json();
       })
       .then(({ games }) => {
@@ -18,30 +18,9 @@ const useFetch = (fetchURL) => {
       }) // If there is an error, set the error state to the error message
       .catch((err) => {
         setIsPending(false);
-        setError(err.message, console.log(err.message));
+        setError(err.message);
       });
   }, [fetchURL]);
-
-  //     const fetchActiveGames = () => {
-  //       fetch(fetchURL)
-  //         .then((res) => res.json())
-  //         .then(({ games }) => {
-  //           setActiveGames([...games]);
-  //         });
-  //     };
-
-  //     const fetchArchiveGames = () => {
-  //       const [currentYear, currentMonth] = getDateInfo();
-  //       fetch(fetchURL + `/${currentYear}/${currentMonth}`)
-  //         .then((res) => res.json())
-  //         .then(({ games }) => {
-  //           setGameArchive([...games]);
-  //         });
-  //     };
-
-  //     fetchActiveGames();
-  //     fetchArchiveGames();
-  //   }, []);
 
   return { isPending, error, games };
 };

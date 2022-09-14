@@ -20,17 +20,11 @@ const resultStates = {
 
 function App() {
   const fetchURL = 'https://api.chess.com/pub/player/jallend1/games';
-  const {
-    isPending: isActivePending,
-    error: activeError,
-    games: activeGames
-  } = useFetch(fetchURL);
+  const { games: activeGames } = useFetch(fetchURL);
   const [gameResults, setGameResults] = useState('loading');
   const [displayedMessage, setDisplayedMessage] = useState(
     resultStates.loading
   );
-  // const [activeGames, setActiveGames] = useState(null);
-  // const [gameArchive, setGameArchive] = useState(null);
   const [gameCode, setGameCode] = useState('loading');
   const [previousGame, setPreviousGame] = useState(null);
 
@@ -107,11 +101,9 @@ function App() {
   };
 
   const [currentYear, currentMonth] = getDateInfo();
-  const {
-    games: gameArchive,
-    isPending: isArchivePending,
-    error: errorArchive
-  } = useFetch(fetchURL + `/${currentYear}/${currentMonth}`);
+  const { games: gameArchive } = useFetch(
+    fetchURL + `/${currentYear}/${currentMonth}`
+  );
 
   // TODO: Universalize the fetch to allow for any month/year
   // const fetchArchive = (year, month) => {
