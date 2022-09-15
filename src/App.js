@@ -3,9 +3,11 @@
 // TODO: Consolidate all date functions -- Use state?
 
 import { useEffect, useState } from 'react';
+import useFetch from './useFetch';
+
+import Header from './Components/Header';
 import BackgroundVideo from './Components/BackgroundVideo';
 import Results from './Components/Results';
-import useFetch from './useFetch';
 
 const resultStates = {
   win: '🎉 Yes. 🎉',
@@ -137,9 +139,7 @@ function App() {
   return (
     <div className="App">
       <div className="wrapper">
-        <header className="status-header">
-          <h1> Did Jason beat Papa today?</h1>
-        </header>
+        <Header />
         <BackgroundVideo gameResults={gameResults} />
         <Results
           displayedMessage={displayedMessage}
