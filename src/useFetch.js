@@ -20,7 +20,7 @@ const useFetch = (fetchURL, secondFetchURL = null) => {
               return res.json();
             })
             .then(({ games: secondGames }) => {
-              setGames([...games, ...secondGames]);
+              setGames([...secondGames, ...games]);
               setIsPending(false);
               setError(null);
             });

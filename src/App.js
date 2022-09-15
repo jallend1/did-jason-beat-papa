@@ -1,9 +1,7 @@
 // TODO: Add transition from loading message to game result display
 // TODO: Easy way to figure out streaks with Chess dot com API?
-// TODO: Literally ANY kind of error handling.
 // TODO: Preload videos during that waiting-for-dramatic-effect window
 // TODO: Consolidate all date functions -- Use state?
-// TODO: Early in month, array will be too short
 
 import { useEffect, useState } from 'react';
 import BackgroundVideo from './Components/BackgroundVideo';
@@ -59,7 +57,7 @@ function App() {
         setGameCode('pending');
         if (gameArchive) setPreviousGame(gameArchive[gameArchive.length - 1]);
       }
-    } else if (gameArchive) {
+    } else if (gameArchive && gameArchive.length > 0) {
       const mostRecentGame = gameArchive[gameArchive.length - 1];
       setPreviousGame(getJasonsResults(gameArchive[gameArchive.length - 2]));
       if (isTodaysGame(mostRecentGame)) {
@@ -108,7 +106,7 @@ function App() {
   const [currentYear, currentMonth, currentDay] = getDateInfo();
 
   const calculateSecondFetchURL = () => {
-    if (currentDay > 1) return null;
+    if (currentDay < 2) return null;
     else {
       let previousGameYear = currentYear;
       let previousGameMonth = currentMonth - 1;
@@ -126,17 +124,6 @@ function App() {
     fetchURL + `/${currentYear}/${currentMonth}`,
     secondFetchURL
   );
-
-  // TODO: Universalize the fetch to allow for any month/year
-  // const fetchArchive = (year, month) => {
-  //   if (games.length < 15) {
-  //     fetch(fetchURL + `/2022/07`)
-  //       .then((res) => res.json())
-  //       .then((previousGames) => {
-  //         setGameArchive([...games, ...previousGames.games]);
-  //       });
-  //   }
-  // };
 
   useEffect(checkActiveGameOpponent, [activeGames, gameArchive, previousGame]);
   useEffect(displayGameOutcome, [gameResults, gameCode]);
