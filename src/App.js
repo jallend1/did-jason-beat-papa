@@ -1,4 +1,3 @@
-// TODO: Add transition from loading message to game result display
 // TODO: Easy way to figure out streaks with Chess dot com API?
 // TODO: Preload videos during that waiting-for-dramatic-effect window
 // TODO: Consolidate all date functions -- Use state?
@@ -19,6 +18,7 @@ const resultStates = {
 function App() {
   const fetchURL = 'https://api.chess.com/pub/player/jallend1/games';
   const { games: activeGames } = useFetch(fetchURL);
+
   const [gameResults, setGameResults] = useState('loading');
   const [displayedMessage, setDisplayedMessage] = useState(
     resultStates.loading
@@ -26,6 +26,9 @@ function App() {
   const [gameCode, setGameCode] = useState('loading');
   const [previousGame, setPreviousGame] = useState(null);
 
+  // **************** //
+  //  Date Functions  //
+  // **************** //
   const isTodaysGame = (game) => {
     const gameEndDate = new Date(game.end_time * 1000).getDate();
     const todaysDate = new Date().getDate();
@@ -33,10 +36,43 @@ function App() {
   };
 
   const formatMonth = (month) => {
-    // Ensures month is in two digit format endpoint requires
-    if (month < 10) month = '0' + month;
-    return month;
+    return month < 10 ? (month = '0' + month) : month;
   };
+
+  const getDateInfo = () => {
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
+    const currentDay = currentDate.getDate();
+    const currentMonth = formatMonth(currentDate.getMonth() + 1);
+    return [currentYear, currentMonth, currentDay];
+  };
+
+  const [currentYear, currentMonth, currentDay] = getDateInfo();
+
+  const calculateSecondFetchURL = () => {
+    if (currentDay < 3) return null;
+    // If it's the first two days of the month, we need to fetch the previous month's games
+    else {
+      let previousGameYear = currentYear;
+      let previousGameMonth = currentMonth - 1;
+      if (previousGameMonth < 0) {
+        previousGameMonth = 12;
+        previousGameYear = currentYear - 1;
+      }
+      previousGameMonth = formatMonth(previousGameMonth);
+      return `https://api.chess.com/pub/player/jallend1/games/${previousGameYear}/${previousGameMonth}`;
+    }
+  };
+
+  // **************** //
+  //  Fetch Archive  //
+  // **************** //
+
+  const secondFetchURL = calculateSecondFetchURL();
+  const { games: gameArchive } = useFetch(
+    fetchURL + `/${currentYear}/${currentMonth}`,
+    secondFetchURL
+  );
 
   // TODO: Apply this function to archive games as well
   const checkIsPapaOpponent = (game) => {
@@ -94,36 +130,6 @@ function App() {
     else if (gameCode === 'checkmated') return 'loss';
     else return gameCode;
   };
-
-  const getDateInfo = () => {
-    const currentDate = new Date();
-    const currentYear = currentDate.getFullYear();
-    const currentDay = currentDate.getDate();
-    const currentMonth = formatMonth(currentDate.getMonth() + 1);
-    return [currentYear, currentMonth, currentDay];
-  };
-
-  const [currentYear, currentMonth, currentDay] = getDateInfo();
-
-  const calculateSecondFetchURL = () => {
-    if (currentDay < 2) return null;
-    else {
-      let previousGameYear = currentYear;
-      let previousGameMonth = currentMonth - 1;
-      if (previousGameMonth < 0) {
-        previousGameMonth = 12;
-        previousGameYear = currentYear - 1;
-      }
-      previousGameMonth = formatMonth(previousGameMonth);
-      return `https://api.chess.com/pub/player/jallend1/games/${previousGameYear}/${previousGameMonth}`;
-    }
-  };
-
-  const secondFetchURL = calculateSecondFetchURL();
-  const { games: gameArchive } = useFetch(
-    fetchURL + `/${currentYear}/${currentMonth}`,
-    secondFetchURL
-  );
 
   useEffect(checkActiveGameOpponent, [activeGames, gameArchive, previousGame]);
   useEffect(displayGameOutcome, [gameResults, gameCode]);
