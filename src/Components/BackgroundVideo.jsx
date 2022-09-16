@@ -18,6 +18,7 @@ const backgroundVideos = {
   loading: { video: LoadingVideo, screenshot: loadingScreenshot },
   draw: { video: DrawVideo, screenshot: drawScreenshot }
 };
+
 const BackgroundVideo = ({ gameResults }) => {
   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
 
@@ -34,7 +35,7 @@ const BackgroundVideo = ({ gameResults }) => {
     <div className="background-video" key={gameResults}>
       <img
         src={backgroundVideos[gameResults].screenshot}
-        alt="loading screenshot"
+        alt="Results screenshot"
         style={{ opacity: isVideoLoaded ? 0 : 1 }}
         className="background"
       />
