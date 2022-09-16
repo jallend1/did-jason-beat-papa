@@ -11,15 +11,15 @@ import victoryScreenshot from '../assets/images/screenshot-win.jpg';
 import defeatScreenshot from '../assets/images/screenshot-defeat.png';
 import drawScreenshot from '../assets/images/screenshot-draw.png';
 
+const backgroundVideos = {
+  win: { video: VictoryVideo, screenshot: victoryScreenshot },
+  loss: { video: DefeatVideo, screenshot: defeatScreenshot },
+  pending: { video: NotYetVideo, screenshot: notYetScreenshot },
+  loading: { video: LoadingVideo, screenshot: loadingScreenshot },
+  draw: { video: DrawVideo, screenshot: drawScreenshot }
+};
 const BackgroundVideo = ({ gameResults }) => {
   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
-  const backgroundVideos = {
-    win: { video: VictoryVideo, screenshot: victoryScreenshot },
-    loss: { video: DefeatVideo, screenshot: defeatScreenshot },
-    pending: { video: NotYetVideo, screenshot: notYetScreenshot },
-    loading: { video: LoadingVideo, screenshot: loadingScreenshot },
-    draw: { video: DrawVideo, screenshot: drawScreenshot }
-  };
 
   const onLoadedData = () => {
     setIsVideoLoaded(true);
@@ -27,6 +27,7 @@ const BackgroundVideo = ({ gameResults }) => {
 
   useEffect(() => {
     setIsVideoLoaded(false);
+    new Image().src = backgroundVideos[gameResults].screenshot;
   }, [gameResults]);
 
   return (
@@ -46,6 +47,7 @@ const BackgroundVideo = ({ gameResults }) => {
         type="video/mp4"
         onLoadedData={onLoadedData}
         style={{ opacity: isVideoLoaded ? 1 : 0 }}
+        preload="auto"
       />
     </div>
   );
