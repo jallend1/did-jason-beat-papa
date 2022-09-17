@@ -29,7 +29,18 @@ const BackgroundVideo = ({ gameResults }) => {
   useEffect(() => {
     setIsVideoLoaded(false);
     new Image().src = backgroundVideos[gameResults].screenshot;
+    if (gameResults !== 'loading') {
+      abortAssetDownload();
+    }
   }, [gameResults]);
+
+  // TODO: This is not yet working!
+  const abortAssetDownload = () => {
+    const el = document.getElementById('background-video');
+    if (el && el.src.includes('loading')) {
+      el.setAttribute('src', '');
+    }
+  };
 
   return (
     <div className="background-video" key={gameResults}>
@@ -40,6 +51,7 @@ const BackgroundVideo = ({ gameResults }) => {
         className="background"
       />
       <video
+        id="background-video"
         autoPlay
         muted
         loop
