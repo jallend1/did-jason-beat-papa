@@ -129,7 +129,8 @@ function App() {
       gameCode === 'insufficient'
     )
       return 'draw';
-    else if (gameCode === 'checkmated') return 'loss';
+    else if (gameCode === 'checkmated' || gameCode === 'resigned')
+      return 'loss';
     else return gameCode;
   };
 
