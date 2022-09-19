@@ -98,7 +98,12 @@ function App() {
           .length > 0
       ) {
         setGameCode('pending');
-        if (gameArchive) setPreviousGame(gameArchive[gameArchive.length - 1]);
+        if (gameArchive)
+          setPreviousGame(
+            translateGameResult(
+              getJasonsResults(gameArchive[gameArchive.length - 1])
+            )
+          );
       }
     } else if (gameArchive && gameArchive.length > 0) {
       // *****************************
