@@ -35,13 +35,13 @@ code {
   z-index: 2;
 }
 
-video {
-  object-fit: cover;
+.background-video > * {
+  position: absolute;
   top: 0;
   left: 0;
-  position: absolute;
   width: 100vw;
   height: 100vh;
+  object-fit: cover;
 }
 
 @media (max-width: 800px) {
@@ -76,13 +76,4 @@ video {
 
 a {
   color: #fff;
-}
-
-.background {
-  object-fit: cover;
-  top: 0;
-  left: 0;
-  position: absolute;
-  width: 100vw;
-  height: 100vh;
 }

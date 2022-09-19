@@ -48,7 +48,7 @@ const BackgroundVideo = ({ gameResults }) => {
         src={backgroundVideos[gameResults].screenshot}
         alt="Results screenshot"
         style={{ opacity: isVideoLoaded ? 0 : 1 }}
-        className="background"
+        className={gameResults === 'pending' ? 'pending-video' : null}
       />
       <video
         id="background-video"
