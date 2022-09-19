@@ -3,9 +3,9 @@
 // TODO: Consolidate all date functions -- Use state?
 // TODO: Render an error screen if the fetch fails with link to chess dot com profile
 // TODO: Compress videos
-// TODO: Swipe to refresh on mobile -- https://www.npmjs.com/package/react-simple-pull-to-refresh
 
 import { useEffect, useState } from 'react';
+import PullToRefresh from 'react-simple-pull-to-refresh';
 import useFetch from './useFetch';
 
 import Header from './Components/Header';
@@ -158,20 +158,26 @@ function App() {
     else return gameCode;
   };
 
+  const handleRefresh = () => {
+    window.location.reload();
+  };
+
   useEffect(checkActiveGameOpponent, [activeGames, gameArchive, previousGame]);
   useEffect(displayGameOutcome, [gameResults, gameCode]);
 
   return (
     <div className="App">
-      <div className="wrapper">
-        <Header />
-        <BackgroundVideo gameResults={gameResults} />
-        <Results
-          displayedMessage={displayedMessage}
-          previousGame={previousGame}
-          gameResults={gameResults}
-        />
-      </div>
+      <PullToRefresh onRefresh={handleRefresh}>
+        <div className="wrapper">
+          <Header />
+          <BackgroundVideo gameResults={gameResults} />
+          <Results
+            displayedMessage={displayedMessage}
+            previousGame={previousGame}
+            gameResults={gameResults}
+          />
+        </div>
+      </PullToRefresh>
     </div>
   );
 }
