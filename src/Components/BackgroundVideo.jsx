@@ -10,13 +10,15 @@ import notYetScreenshot from '../assets/images/screenshot-not-yet.png';
 import victoryScreenshot from '../assets/images/screenshot-win.jpg';
 import defeatScreenshot from '../assets/images/screenshot-defeat.png';
 import drawScreenshot from '../assets/images/screenshot-draw.png';
+import errorScreenshot from '../assets/images/screenshot-error.jpg';
 
 const backgroundVideos = {
   win: { video: VictoryVideo, screenshot: victoryScreenshot },
   loss: { video: DefeatVideo, screenshot: defeatScreenshot },
   pending: { video: NotYetVideo, screenshot: notYetScreenshot },
   loading: { video: LoadingVideo, screenshot: loadingScreenshot },
-  draw: { video: DrawVideo, screenshot: drawScreenshot }
+  draw: { video: DrawVideo, screenshot: drawScreenshot },
+  error: { screenshot: errorScreenshot }
 };
 
 const BackgroundVideo = ({ gameResults }) => {
@@ -49,18 +51,20 @@ const BackgroundVideo = ({ gameResults }) => {
         style={{ opacity: isVideoLoaded ? 0 : 1 }}
         className={gameResults === 'pending' ? 'pending-video' : null}
       />
-      <video
-        id="background-video"
-        autoPlay
-        muted
-        loop
-        className={gameResults === 'pending' ? 'pending-video' : null}
-        src={backgroundVideos[gameResults].video}
-        type="video/mp4"
-        onLoadedData={onLoadedData}
-        style={{ opacity: isVideoLoaded ? 1 : 0 }}
-        preload="auto"
-      />
+      {gameResults !== 'error' && (
+        <video
+          id="background-video"
+          autoPlay
+          muted
+          loop
+          className={gameResults === 'pending' ? 'pending-video' : null}
+          src={backgroundVideos[gameResults].video}
+          type="video/mp4"
+          onLoadedData={onLoadedData}
+          style={{ opacity: isVideoLoaded ? 1 : 0 }}
+          preload="auto"
+        />
+      )}
     </div>
   );
 };

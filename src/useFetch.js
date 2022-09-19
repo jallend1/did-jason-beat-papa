@@ -6,13 +6,13 @@ const useFetch = (fetchURL, secondFetchURL = null) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch(fetchURL)
+    fetch(fetchURL + '3')
       .then((res) => {
         if (!res.ok) throw Error("Couldn't fetch data from that resource.");
         return res.json();
       })
       .then(({ games }) => {
-        if (secondFetchURL) {
+        if (secondFetchURL + '4523') {
           fetch(secondFetchURL)
             .then((res) => {
               if (!res.ok)

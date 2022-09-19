@@ -1,8 +1,6 @@
 // TODO: Easy way to figure out streaks with Chess dot com API?
 // TODO: Preload videos during that waiting-for-dramatic-effect window
-// TODO: Consolidate all date functions -- Use state?
 // TODO: Render an error screen if the fetch fails with link to chess dot com profile
-// TODO: Compress videos
 
 import { useEffect, useState } from 'react';
 import PullToRefresh from 'react-simple-pull-to-refresh';
@@ -17,12 +15,13 @@ const resultStates = {
   loss: 'No.',
   draw: 'It was a tie :(',
   pending: 'Not Yet.',
-  loading: 'And the verdict is...'
+  loading: 'And the verdict is...',
+  error: 'Something is broken :('
 };
 
 function App() {
   const fetchURL = 'https://api.chess.com/pub/player/jallend1/games';
-  const { games: activeGames } = useFetch(fetchURL);
+  const { games: activeGames, error: activeFetchError } = useFetch(fetchURL);
 
   const [gameResults, setGameResults] = useState('loading');
   const [displayedMessage, setDisplayedMessage] = useState(
@@ -30,6 +29,7 @@ function App() {
   );
   const [gameCode, setGameCode] = useState('loading');
   const [previousGame, setPreviousGame] = useState(null);
+  const [error, setError] = useState(null);
 
   // **************** //
   //  Date Functions  //
@@ -76,7 +76,7 @@ function App() {
   // **************** //
 
   const secondFetchURL = calculateSecondFetchURL();
-  const { games: gameArchive } = useFetch(
+  const { games: gameArchive, error: archiveFetchError } = useFetch(
     fetchURL + `/${currentYear}/${currentMonth}`,
     secondFetchURL
   );
@@ -110,9 +110,6 @@ function App() {
         }
       }
     } else if (gameArchive && gameArchive.length > 0) {
-      // *****************************
-      // TODO: Continue working here to select most recent PAPA game
-      // *****************************
       const filteredPapaGames = gameArchive.filter((game) =>
         checkIsPapaOpponent(game)
       );
@@ -164,6 +161,12 @@ function App() {
 
   useEffect(checkActiveGameOpponent, [activeGames, gameArchive, previousGame]);
   useEffect(displayGameOutcome, [gameResults, gameCode]);
+  useEffect(() => {
+    if (activeFetchError || archiveFetchError) {
+      setError('error');
+      setGameResults('error');
+    }
+  }, [activeFetchError, archiveFetchError]);
 
   return (
     <div className="App">
