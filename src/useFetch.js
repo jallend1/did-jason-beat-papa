@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
 const useFetch = (fetchURL, secondFetchURL = null) => {
   const [games, setGames] = useState(null);
@@ -6,13 +6,13 @@ const useFetch = (fetchURL, secondFetchURL = null) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch(fetchURL + '3')
+    fetch(fetchURL)
       .then((res) => {
         if (!res.ok) throw Error("Couldn't fetch data from that resource.");
         return res.json();
       })
       .then(({ games }) => {
-        if (secondFetchURL + '4523') {
+        if (secondFetchURL) {
           fetch(secondFetchURL)
             .then((res) => {
               if (!res.ok)
@@ -36,7 +36,6 @@ const useFetch = (fetchURL, secondFetchURL = null) => {
         setError(err.message);
       });
   }, [fetchURL, secondFetchURL]);
-
   return { isPending, error, games };
 };
 
