@@ -5,30 +5,30 @@
 // TODO: Compress videos
 // TODO: Swipe to refresh on mobile -- https://www.npmjs.com/package/react-simple-pull-to-refresh
 
-import { useEffect, useState } from "react";
-import useFetch from "./useFetch";
+import { useEffect, useState } from 'react';
+import useFetch from './useFetch';
 
-import Header from "./Components/Header";
-import BackgroundVideo from "./Components/BackgroundVideo";
-import Results from "./Components/Results";
+import Header from './Components/Header';
+import BackgroundVideo from './Components/BackgroundVideo';
+import Results from './Components/Results';
 
 const resultStates = {
-  win: "🎉 Yes. 🎉",
-  loss: "No.",
-  draw: "It was a tie :(",
-  pending: "Not Yet.",
-  loading: "And the verdict is...",
+  win: '🎉 Yes. 🎉',
+  loss: 'No.',
+  draw: 'It was a tie :(',
+  pending: 'Not Yet.',
+  loading: 'And the verdict is...'
 };
 
 function App() {
-  const fetchURL = "https://api.chess.com/pub/player/jallend1/games";
+  const fetchURL = 'https://api.chess.com/pub/player/jallend1/games';
   const { games: activeGames } = useFetch(fetchURL);
 
-  const [gameResults, setGameResults] = useState("loading");
+  const [gameResults, setGameResults] = useState('loading');
   const [displayedMessage, setDisplayedMessage] = useState(
     resultStates.loading
   );
-  const [gameCode, setGameCode] = useState("loading");
+  const [gameCode, setGameCode] = useState('loading');
   const [previousGame, setPreviousGame] = useState(null);
 
   // **************** //
@@ -36,12 +36,14 @@ function App() {
   // **************** //
   const isTodaysGame = (game) => {
     const gameEndDate = new Date(game.end_time * 1000).getDate();
+    const gameEndMonth = new Date(game.end_time * 1000).getMonth() + 1;
     const todaysDate = new Date().getDate();
-    return gameEndDate === todaysDate;
+    const todaysMonth = new Date().getMonth() + 1;
+    return gameEndDate === todaysDate && gameEndMonth === todaysMonth;
   };
 
   const formatMonth = (month) => {
-    return month < 10 ? (month = "0" + month) : month;
+    return month < 10 ? (month = '0' + month) : month;
   };
 
   const getDateInfo = () => {
@@ -81,7 +83,7 @@ function App() {
 
   // TODO: Apply this function to archive games as well
   const checkIsPapaOpponent = (game) => {
-    const papaURL = "https://api.chess.com/pub/player/dchessmeister1";
+    const papaURL = 'https://api.chess.com/pub/player/dchessmeister1';
     if (Object.values(game.black).includes(papaURL)) return true;
     else if (Object.values(game.white).includes(papaURL)) return true;
     // If active game, opponent URL is stored at top level
@@ -95,7 +97,7 @@ function App() {
         activeGames.filter((activeGame) => checkIsPapaOpponent(activeGame))
           .length > 0
       ) {
-        setGameCode("pending");
+        setGameCode('pending');
         if (gameArchive) setPreviousGame(gameArchive[gameArchive.length - 1]);
       }
     } else if (gameArchive && gameArchive.length > 0) {
@@ -113,13 +115,13 @@ function App() {
         setGameCode(getJasonsResults(mostRecentGame));
       } else {
         // If the most recent game ended on a date that is not today, set status to pending
-        setGameCode("pending");
+        setGameCode('pending');
       }
     }
   };
 
   const getJasonsResults = (game) => {
-    return game.black.username === "jallend1"
+    return game.black.username === 'jallend1'
       ? game.black.result
       : game.white.result;
   };
@@ -128,19 +130,19 @@ function App() {
     setDisplayedMessage(resultStates[gameResults]);
     setTimeout(() => {
       setGameResults(translateGameResult(gameCode));
-    }, "3000");
+    }, '3000');
   };
 
   const translateGameResult = (gameCode) => {
     if (
-      gameCode === "agree" ||
-      gameCode === "stalemate" ||
-      gameCode === "repetition" ||
-      gameCode === "insufficient"
+      gameCode === 'agree' ||
+      gameCode === 'stalemate' ||
+      gameCode === 'repetition' ||
+      gameCode === 'insufficient'
     )
-      return "draw";
-    else if (gameCode === "checkmated" || gameCode === "resigned")
-      return "loss";
+      return 'draw';
+    else if (gameCode === 'checkmated' || gameCode === 'resigned')
+      return 'loss';
     else return gameCode;
   };
 
