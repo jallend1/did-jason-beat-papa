@@ -99,6 +99,13 @@ function App() {
         if (gameArchive) setPreviousGame(gameArchive[gameArchive.length - 1]);
       }
     } else if (gameArchive && gameArchive.length > 0) {
+      // *****************************
+      // TODO: Continue working here to select most recent PAPA game
+      // *****************************
+      const filteredPapaGames = gameArchive.filter((game) =>
+        checkIsPapaOpponent(game)
+      );
+      console.log(filteredPapaGames);
       const mostRecentGame = gameArchive[gameArchive.length - 1];
       setPreviousGame(getJasonsResults(gameArchive[gameArchive.length - 2]));
       if (isTodaysGame(mostRecentGame)) {
