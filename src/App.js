@@ -98,12 +98,16 @@ function App() {
           .length > 0
       ) {
         setGameCode('pending');
-        if (gameArchive)
-          setPreviousGame(
-            translateGameResult(
-              getJasonsResults(gameArchive[gameArchive.length - 1])
-            )
+        if (gameArchive) {
+          const papaGames = gameArchive.filter((game) =>
+            checkIsPapaOpponent(game)
           );
+          const mostRecentPapaGame = papaGames[papaGames.length - 1];
+          const translatedResults = translateGameResult(
+            getJasonsResults(mostRecentPapaGame)
+          );
+          setPreviousGame(translatedResults);
+        }
       }
     } else if (gameArchive && gameArchive.length > 0) {
       // *****************************
@@ -112,9 +116,12 @@ function App() {
       const filteredPapaGames = gameArchive.filter((game) =>
         checkIsPapaOpponent(game)
       );
-      console.log(filteredPapaGames);
-      const mostRecentGame = gameArchive[gameArchive.length - 1];
-      setPreviousGame(getJasonsResults(gameArchive[gameArchive.length - 2]));
+      const mostRecentGame = filteredPapaGames[filteredPapaGames.length - 1];
+      setPreviousGame(
+        translateGameResult(
+          getJasonsResults(gameArchive[gameArchive.length - 2])
+        )
+      );
       if (isTodaysGame(mostRecentGame)) {
         // If the most recent game was played today, display the results
         setGameCode(getJasonsResults(mostRecentGame));
