@@ -1,6 +1,7 @@
 // TODO: Easy way to figure out streaks with Chess dot com API?
 // TODO: Preload videos during that waiting-for-dramatic-effect window
 // TODO: Render an error screen if the fetch fails with link to chess dot com profile
+// TODO: I don't remember the distinctdions between gameResult and gameCode -- Fix the naming
 
 import { useEffect, useState } from "react";
 import PullToRefresh from "react-simple-pull-to-refresh";
@@ -27,6 +28,8 @@ function App() {
   const fetchURL = "https://api.chess.com/pub/player/jallend1/games";
   const { games: activeGames, error: activeFetchError } = useFetch(fetchURL);
   const { currentYear, currentMonth, currentDay } = dateFunctions();
+  const [activePapaGames, setActivePapaGames] = useState(null);
+  const [archivePapaGames, setArchivePapaGames] = useState(null);
   const [gameResults, setGameResults] = useState("loading");
   const [gameCode, setGameCode] = useState("loading");
   const [previousGame, setPreviousGame] = useState(null);
@@ -55,39 +58,33 @@ function App() {
 
   const checkIsPapaOpponent = (game) => {
     const papaURL = "https://api.chess.com/pub/player/dchessmeister1";
-    if (Object.values(game.black).includes(papaURL)) return true;
-    else if (Object.values(game.white).includes(papaURL)) return true;
+    if (
+      Object.values(game.black).includes(papaURL) ||
+      Object.values(game.white).includes(papaURL)
+    )
+      return true;
     // If active game, opponent URL is stored at top level
     else if (Object.values(game).includes(papaURL)) return true;
     else return false;
   };
 
+  // TODO: Break this up into smaller functions
   const checkActiveGameOpponent = () => {
-    if (activeGames && activeGames.length > 0) {
-      if (
-        activeGames.filter((activeGame) => checkIsPapaOpponent(activeGame))
-          .length > 0
-      ) {
-        setGameCode("pending");
-        if (gameArchive) {
-          const papaGames = gameArchive.filter((game) =>
-            checkIsPapaOpponent(game)
-          );
-          const mostRecentPapaGame = papaGames[papaGames.length - 1];
-          const translatedResults = translateGameResult(
-            getJasonsResults(mostRecentPapaGame)
-          );
-          setPreviousGame(translatedResults);
-        }
+    if (activePapaGames && activePapaGames.length > 0) {
+      setGameCode("pending");
+      if (archivePapaGames) {
+        const mostRecentPapaGame =
+          archivePapaGames[archivePapaGames.length - 1];
+        const translatedResults = translateGameResult(
+          getJasonsResults(mostRecentPapaGame)
+        );
+        setPreviousGame(translatedResults);
       }
-    } else if (gameArchive && gameArchive.length > 0) {
-      const filteredPapaGames = gameArchive.filter((game) =>
-        checkIsPapaOpponent(game)
-      );
-      const mostRecentGame = filteredPapaGames[filteredPapaGames.length - 1];
+    } else if (archivePapaGames && archivePapaGames.length > 0) {
+      const mostRecentGame = archivePapaGames[archivePapaGames.length - 1];
       setPreviousGame(
         translateGameResult(
-          getJasonsResults(gameArchive[gameArchive.length - 2])
+          getJasonsResults(archivePapaGames[archivePapaGames.length - 2])
         )
       );
       if (isTodaysGame(mostRecentGame)) {
@@ -130,7 +127,27 @@ function App() {
     window.location.reload();
   };
 
-  useEffect(checkActiveGameOpponent, [activeGames, gameArchive, previousGame]);
+  useEffect(() => {
+    const findActivePapaGames = () => {
+      if (activeGames && activeGames.length > 0)
+        return activeGames.filter((game) => checkIsPapaOpponent(game));
+    };
+    setActivePapaGames(findActivePapaGames());
+  }, [activeGames]);
+
+  useEffect(() => {
+    const findArchivePapaGames = () => {
+      if (gameArchive && gameArchive.length > 0)
+        return gameArchive.filter((game) => checkIsPapaOpponent(game));
+    };
+    setArchivePapaGames(findArchivePapaGames());
+  }, [gameArchive]);
+
+  useEffect(checkActiveGameOpponent, [
+    activePapaGames,
+    archivePapaGames,
+    previousGame,
+  ]);
   useEffect(displayGameOutcome, [gameResults, gameCode]);
   useEffect(() => {
     if (activeFetchError && archiveFetchError) {
