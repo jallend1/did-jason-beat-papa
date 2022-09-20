@@ -5,6 +5,10 @@
 import { useEffect, useState } from "react";
 import PullToRefresh from "react-simple-pull-to-refresh";
 import useFetch from "./useFetch";
+import dateFunctions, {
+  calculatePreviousMonth,
+  isTodaysGame,
+} from "./dateFunctions";
 
 import Header from "./Components/Header";
 import BackgroundVideo from "./Components/BackgroundVideo";
@@ -22,57 +26,26 @@ const resultStates = {
 function App() {
   const fetchURL = "https://api.chess.com/pub/player/jallend1/games";
   const { games: activeGames, error: activeFetchError } = useFetch(fetchURL);
-
+  const { currentYear, currentMonth, currentDay } = dateFunctions();
   const [gameResults, setGameResults] = useState("loading");
+  const [gameCode, setGameCode] = useState("loading");
+  const [previousGame, setPreviousGame] = useState(null);
   const [displayedMessage, setDisplayedMessage] = useState(
     resultStates.loading
   );
-  const [gameCode, setGameCode] = useState("loading");
-  const [previousGame, setPreviousGame] = useState(null);
-
-  // **************** //
-  //  Date Functions  //
-  // **************** //
-  const isTodaysGame = (game) => {
-    const gameEndDate = new Date(game.end_time * 1000).getDate();
-    const gameEndMonth = new Date(game.end_time * 1000).getMonth() + 1;
-    const todaysDate = new Date().getDate();
-    const todaysMonth = new Date().getMonth() + 1;
-    return gameEndDate === todaysDate && gameEndMonth === todaysMonth;
-  };
-
-  const formatMonth = (month) => {
-    return month < 10 ? (month = "0" + month) : month;
-  };
-
-  const getDateInfo = () => {
-    const currentDate = new Date();
-    const currentYear = currentDate.getFullYear();
-    const currentDay = currentDate.getDate();
-    const currentMonth = formatMonth(currentDate.getMonth() + 1);
-    return [currentYear, currentMonth, currentDay];
-  };
-
-  const [currentYear, currentMonth, currentDay] = getDateInfo();
-
-  const calculateSecondFetchURL = () => {
-    if (currentDay < 3) return null;
-    // If it's the first two days of the month, we need to fetch the previous month's games
-    else {
-      let previousGameYear = currentYear;
-      let previousGameMonth = currentMonth - 1;
-      if (previousGameMonth < 0) {
-        previousGameMonth = 12;
-        previousGameYear = currentYear - 1;
-      }
-      previousGameMonth = formatMonth(previousGameMonth);
-      return `https://api.chess.com/pub/player/jallend1/games/${previousGameYear}/${previousGameMonth}`;
-    }
-  };
 
   // **************** //
   //  Fetch Archive  //
   // **************** //
+
+  const calculateSecondFetchURL = () => {
+    if (currentDay < 3) {
+      const { previousGameMonth, previousGameYear } = calculatePreviousMonth();
+      return `https://api.chess.com/pub/player/jallend1/games/${previousGameYear}/${previousGameMonth}`;
+    } else {
+      return null;
+    }
+  };
 
   const secondFetchURL = calculateSecondFetchURL();
   const { games: gameArchive, error: archiveFetchError } = useFetch(
