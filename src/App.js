@@ -143,20 +143,13 @@ function App() {
   };
 
   useEffect(() => {
-    const findActivePapaGames = () => {
-      if (activeGames && activeGames.length > 0)
-        return activeGames.filter((game) => checkIsPapaOpponent(game));
+    const findPapaGames = (gameType) => {
+      if (gameType && gameType.length > 0)
+        return gameType.filter((game) => checkIsPapaOpponent(game));
     };
-    setActivePapaGames(findActivePapaGames() || []);
-  }, [activeGames]);
-
-  useEffect(() => {
-    const findArchivePapaGames = () => {
-      if (gameArchive && gameArchive.length > 0)
-        return gameArchive.filter((game) => checkIsPapaOpponent(game));
-    };
-    setArchivePapaGames(findArchivePapaGames());
-  }, [gameArchive]);
+    setArchivePapaGames(findPapaGames(gameArchive));
+    setActivePapaGames(findPapaGames(activeGames) || []);
+  }, [gameArchive, activeGames]);
 
   useEffect(displayGameOutcome, [gameResults, gameCode]);
   useEffect(() => {
