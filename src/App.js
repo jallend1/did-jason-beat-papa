@@ -31,6 +31,7 @@ function App() {
   const [activePapaGames, setActivePapaGames] = useState(null);
   const [archivePapaGames, setArchivePapaGames] = useState(null);
   const [gameResults, setGameResults] = useState("loading");
+  const [isActiveGame, setIsActiveGame] = useState(null);
   const [gameCode, setGameCode] = useState("loading");
   const [previousGame, setPreviousGame] = useState(null);
   const [displayedMessage, setDisplayedMessage] = useState(
@@ -68,34 +69,48 @@ function App() {
     else return false;
   };
 
-  // TODO: Break this up into smaller functions
-  const checkActiveGameOpponent = () => {
-    if (activePapaGames && activePapaGames.length > 0) {
-      setGameCode("pending");
+  const checkActiveGames = () => {
+    setIsActiveGame(activePapaGames && activePapaGames.length > 0);
+  };
+
+  useEffect(checkActiveGames, [activePapaGames, isActiveGame]);
+
+  const getLatestGameStatus = () => {
+    if (isActiveGame) setGameCode("pending");
+    else {
       if (archivePapaGames) {
-        const mostRecentPapaGame =
-          archivePapaGames[archivePapaGames.length - 1];
-        const translatedResults = translateGameResult(
-          getJasonsResults(mostRecentPapaGame)
-        );
-        setPreviousGame(translatedResults);
-      }
-    } else if (archivePapaGames && archivePapaGames.length > 0) {
-      const mostRecentGame = archivePapaGames[archivePapaGames.length - 1];
-      setPreviousGame(
-        translateGameResult(
-          getJasonsResults(archivePapaGames[archivePapaGames.length - 2])
-        )
-      );
-      if (isTodaysGame(mostRecentGame)) {
-        // If the most recent game was played today, display the results
-        setGameCode(getJasonsResults(mostRecentGame));
-      } else {
-        // If the most recent game ended on a date that is not today, set status to pending
-        setGameCode("pending");
+        const mostRecentGame = archivePapaGames[archivePapaGames.length - 1];
+        if (isTodaysGame(mostRecentGame)) {
+          // If the most recent game was played today, display the results
+          setGameCode(getJasonsResults(mostRecentGame));
+        } else {
+          // If the most recent game ended on a date that is not today, set status to pending
+          setGameCode("pending");
+        }
       }
     }
   };
+
+  useEffect(getLatestGameStatus, [isActiveGame, archivePapaGames]);
+
+  const getPreviousGame = () => {
+    if (archivePapaGames) {
+      if (isActiveGame) {
+        const translatedResults = translateGameResult(
+          getJasonsResults(archivePapaGames[archivePapaGames.length - 1])
+        );
+        setPreviousGame(translatedResults);
+      } else {
+        setPreviousGame(
+          translateGameResult(
+            getJasonsResults(archivePapaGames[archivePapaGames.length - 2])
+          )
+        );
+      }
+    }
+  };
+
+  useEffect(getPreviousGame, [archivePapaGames, isActiveGame]);
 
   const getJasonsResults = (game) => {
     return game.black.username === "jallend1"
@@ -132,7 +147,7 @@ function App() {
       if (activeGames && activeGames.length > 0)
         return activeGames.filter((game) => checkIsPapaOpponent(game));
     };
-    setActivePapaGames(findActivePapaGames());
+    setActivePapaGames(findActivePapaGames() || []);
   }, [activeGames]);
 
   useEffect(() => {
@@ -143,11 +158,6 @@ function App() {
     setArchivePapaGames(findArchivePapaGames());
   }, [gameArchive]);
 
-  useEffect(checkActiveGameOpponent, [
-    activePapaGames,
-    archivePapaGames,
-    previousGame,
-  ]);
   useEffect(displayGameOutcome, [gameResults, gameCode]);
   useEffect(() => {
     if (activeFetchError && archiveFetchError) {
