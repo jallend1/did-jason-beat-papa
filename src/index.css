@@ -71,7 +71,9 @@ code {
 }
 
 .previous-results {
+  max-width: 80%;
   font-size: 0.75rem;
+  margin: auto;
 }
 
 a {

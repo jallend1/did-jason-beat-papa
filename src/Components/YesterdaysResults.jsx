@@ -4,18 +4,19 @@ const YesterdaysResults = ({ previousGame, gameResults }) => {
 
   useEffect(() => {
     const handleWinToday = () => {
-      if (previousGame === 'win') return 'Jason also won yesterday!';
+      if (previousGame === 'win')
+        return "Jason also won yesterday, so he's gonna start painting chess pieces on his car like Papa does bicycles.";
       else if (previousGame === 'loss')
-        return "This helps heal him from yesterday's loss.";
+        return "This is one small step in healing the wounds from yesterday's defeat.";
       else if (previousGame === 'draw')
         return "This undoes a little of the shame from yesterday's draw.";
     };
 
     const handleLossToday = () => {
       if (previousGame === 'win')
-        return "But Jason won yesterday, so he's finding comfort in that.";
+        return "But Jason DID win yesterday, so he's finding some small comfort in that.";
       else if (previousGame === 'loss')
-        return "Jason also lost yesterday, so he's in a dark place";
+        return "Jason also lost yesterday, so he's in a dark place. Send him your love.";
       else if (previousGame === 'draw')
         return 'And yesterday was a draw, so things are not going great right now for Jason.';
     };
@@ -31,11 +32,11 @@ const YesterdaysResults = ({ previousGame, gameResults }) => {
 
     const handlePendingToday = () => {
       if (previousGame === 'win')
-        return 'Jason won yesterday, so he is hoping to build some momentum.';
+        return "Jason won yesterday, so we're taking that as clear evidence God will be on his side today.";
       else if (previousGame === 'loss')
-        return "Jason lost yesterday, so he has a lot riding on today's outcome.";
+        return 'Jason lost yesterday, so he is today seeking to restore honor to The House of Allen.';
       else if (previousGame === 'draw')
-        return 'Jason tied yesterday, so he is hoping to get back in the win column.';
+        return 'Jason and Papa tied yesterday, which inspires very similar feelings as a Jason loss.';
     };
 
     if (gameResults === 'win') setYesterdaysMessage(handleWinToday());
