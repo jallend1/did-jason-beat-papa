@@ -3,36 +3,36 @@
 // TODO: Render an error screen if the fetch fails with link to chess dot com profile
 // TODO: I don't remember the distinctdions between gameResult and gameCode -- Fix the naming
 
-import { useEffect, useState } from "react";
-import PullToRefresh from "react-simple-pull-to-refresh";
-import useFetch from "./useFetch";
+import { useEffect, useState, useCallback } from 'react';
+import PullToRefresh from 'react-simple-pull-to-refresh';
+import useFetch from './useFetch';
 import dateFunctions, {
   calculatePreviousMonth,
-  isTodaysGame,
-} from "./dateFunctions";
+  isTodaysGame
+} from './dateFunctions';
 
-import Header from "./Components/Header";
-import BackgroundVideo from "./Components/BackgroundVideo";
-import Results from "./Components/Results";
+import Header from './Components/Header';
+import BackgroundVideo from './Components/BackgroundVideo';
+import Results from './Components/Results';
 
 const resultStates = {
-  win: "🎉 Yes. 🎉",
-  loss: "No.",
-  draw: "It was a tie :(",
-  pending: "Not Yet.",
-  loading: "And the verdict is...",
-  error: "Something is broken :(",
+  win: '🎉 Yes. 🎉',
+  loss: 'No.',
+  draw: 'It was a tie :(',
+  pending: 'Not Yet.',
+  loading: 'And the verdict is...',
+  error: 'Something is broken :('
 };
 
 function App() {
-  const fetchURL = "https://api.chess.com/pub/player/jallend1/games";
+  const fetchURL = 'https://api.chess.com/pub/player/jallend1/games';
   const { games: activeGames, error: activeFetchError } = useFetch(fetchURL);
   const { currentYear, currentMonth, currentDay } = dateFunctions();
   const [activePapaGames, setActivePapaGames] = useState(null);
   const [archivePapaGames, setArchivePapaGames] = useState(null);
-  const [gameResults, setGameResults] = useState("loading");
+  const [gameResults, setGameResults] = useState('loading');
   const [isActiveGame, setIsActiveGame] = useState(null);
-  const [gameCode, setGameCode] = useState("loading");
+  const [gameCode, setGameCode] = useState('loading');
   const [previousGame, setPreviousGame] = useState(null);
   const [displayedMessage, setDisplayedMessage] = useState(
     resultStates.loading
@@ -58,7 +58,7 @@ function App() {
   );
 
   const checkIsPapaOpponent = (game) => {
-    const papaURL = "https://api.chess.com/pub/player/dchessmeister1";
+    const papaURL = 'https://api.chess.com/pub/player/dchessmeister1';
     if (
       Object.values(game.black).includes(papaURL) ||
       Object.values(game.white).includes(papaURL)
@@ -76,7 +76,7 @@ function App() {
   useEffect(checkActiveGames, [activePapaGames, isActiveGame]);
 
   const getLatestGameStatus = () => {
-    if (isActiveGame) setGameCode("pending");
+    if (isActiveGame) setGameCode('pending');
     else {
       if (archivePapaGames) {
         const mostRecentGame = archivePapaGames[archivePapaGames.length - 1];
@@ -85,56 +85,57 @@ function App() {
           setGameCode(getJasonsResults(mostRecentGame));
         } else {
           // If the most recent game ended on a date that is not today, set status to pending
-          setGameCode("pending");
+          setGameCode('pending');
         }
       }
     }
   };
 
-  useEffect(getLatestGameStatus, [isActiveGame, archivePapaGames]);
+  const getJasonsResults = useCallback((game) => {
+    return game.black.username === 'jallend1'
+      ? translateGameResult(game.black.result)
+      : translateGameResult(game.white.result);
+  }, []);
 
   const getPreviousGame = () => {
     if (archivePapaGames) {
-      if (isActiveGame) {
-        const translatedResults = translateGameResult(
-          getJasonsResults(archivePapaGames[archivePapaGames.length - 1])
-        );
-        setPreviousGame(translatedResults);
-      } else {
-        setPreviousGame(
-          translateGameResult(
-            getJasonsResults(archivePapaGames[archivePapaGames.length - 2])
-          )
-        );
-      }
+      let gamePosition;
+      isActiveGame ? (gamePosition = 1) : (gamePosition = 2);
+      const previousGameResult = getJasonsResults(
+        archivePapaGames[archivePapaGames.length - gamePosition]
+      );
+      setPreviousGame(previousGameResult);
     }
   };
 
-  useEffect(getPreviousGame, [archivePapaGames, isActiveGame]);
-
-  const getJasonsResults = (game) => {
-    return game.black.username === "jallend1"
-      ? game.black.result
-      : game.white.result;
-  };
+  useEffect(getLatestGameStatus, [
+    isActiveGame,
+    archivePapaGames,
+    getJasonsResults
+  ]);
+  useEffect(getPreviousGame, [
+    archivePapaGames,
+    isActiveGame,
+    getJasonsResults
+  ]);
 
   const displayGameOutcome = () => {
     setDisplayedMessage(resultStates[gameResults]);
     setTimeout(() => {
       setGameResults(translateGameResult(gameCode));
-    }, "3000");
+    }, '3000');
   };
 
   const translateGameResult = (gameCode) => {
     if (
-      gameCode === "agree" ||
-      gameCode === "stalemate" ||
-      gameCode === "repetition" ||
-      gameCode === "insufficient"
+      gameCode === 'agree' ||
+      gameCode === 'stalemate' ||
+      gameCode === 'repetition' ||
+      gameCode === 'insufficient'
     )
-      return "draw";
-    else if (gameCode === "checkmated" || gameCode === "resigned")
-      return "loss";
+      return 'draw';
+    else if (gameCode === 'checkmated' || gameCode === 'resigned')
+      return 'loss';
     else return gameCode;
   };
 
@@ -154,7 +155,7 @@ function App() {
   useEffect(displayGameOutcome, [gameResults, gameCode]);
   useEffect(() => {
     if (activeFetchError && archiveFetchError) {
-      setGameResults("error");
+      setGameResults('error');
     }
   }, [activeFetchError, archiveFetchError]);
 
