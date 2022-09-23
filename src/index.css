@@ -81,5 +81,5 @@ a {
   color: #fff;
   text-decoration: none;
   padding-bottom: 1px;
-  border-bottom: 1px solid #fff;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.397);
 }
