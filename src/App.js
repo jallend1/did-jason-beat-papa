@@ -106,7 +106,6 @@ function App() {
       const previousGameResult = getJasonsResults(previousGame);
 
       setPreviousGame(previousGameResult);
-      console.log(previousGame.url);
       setPreviousGameURL(previousGame.url);
     }
   };
