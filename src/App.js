@@ -1,7 +1,6 @@
 // TODO: Easy way to figure out streaks with Chess dot com API?
 // TODO: Preload videos during that waiting-for-dramatic-effect window
 // TODO: Render an error screen if the fetch fails with link to chess dot com profile
-// TODO: I don't remember the distinctdions between gameResult and gameCode -- Fix the naming
 
 import { useEffect, useState, useCallback } from 'react';
 import PullToRefresh from 'react-simple-pull-to-refresh';

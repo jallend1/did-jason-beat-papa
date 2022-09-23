@@ -80,7 +80,7 @@ const YesterdaysResults = ({ previousGame, gameResults, previousGameURL }) => {
         return (
           <p>
             Jason won <a href={previousGameURL}>yesterday</a>, so we're taking
-            that as clear evidence God will be on his side today.
+            that as promising evidence God will be on his side today.
           </p>
         );
       else if (previousGame === 'loss')
