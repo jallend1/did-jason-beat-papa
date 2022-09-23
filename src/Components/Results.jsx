@@ -1,6 +1,11 @@
 import YesterdaysResults from './YesterdaysResults';
 
-const Results = ({ displayedMessage, previousGame, gameResults }) => {
+const Results = ({
+  displayedMessage,
+  previousGame,
+  gameResults,
+  previousGameURL
+}) => {
   return (
     <div className="results">
       <div className="results-message">
@@ -9,6 +14,7 @@ const Results = ({ displayedMessage, previousGame, gameResults }) => {
           <YesterdaysResults
             gameResults={gameResults}
             previousGame={previousGame}
+            previousGameURL={previousGameURL}
           />
         )}
       </div>

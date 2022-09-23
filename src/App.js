@@ -34,6 +34,7 @@ function App() {
   const [isActiveGame, setIsActiveGame] = useState(null);
   const [gameCode, setGameCode] = useState('loading');
   const [previousGame, setPreviousGame] = useState(null);
+  const [previousGameURL, setPreviousGameURL] = useState(null);
   const [displayedMessage, setDisplayedMessage] = useState(
     resultStates.loading
   );
@@ -101,10 +102,13 @@ function App() {
     if (archivePapaGames) {
       let gamePosition;
       isActiveGame ? (gamePosition = 1) : (gamePosition = 2);
-      const previousGameResult = getJasonsResults(
-        archivePapaGames[archivePapaGames.length - gamePosition]
-      );
+      const previousGame =
+        archivePapaGames[archivePapaGames.length - gamePosition];
+      const previousGameResult = getJasonsResults(previousGame);
+
       setPreviousGame(previousGameResult);
+      console.log(previousGame.url);
+      setPreviousGameURL(previousGame.url);
     }
   };
 
@@ -169,6 +173,7 @@ function App() {
             displayedMessage={displayedMessage}
             previousGame={previousGame}
             gameResults={gameResults}
+            previousGameURL={previousGameURL}
           />
         </div>
       </PullToRefresh>
